@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<title>test01</title>
+</head>
+<body>
+	<h1>Here is your API data</h1>
+	<h3 th:value=${exchanges}></h3>
+	<table>
+		<thead>
+			<tr>
+				<td>Id</td>
+				<td>Transaction Id</td>
+				<td>Client Id</td>
+				<td>Mobile No.</td>
+				<td>Messages</td>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<tr data-th-each="exchange : ${exchanges}">
+				<td data-th-text="${exchange.id}">...</td>
+				<td data-th-text="${exchange.tranId}">...</td>
+				<td data-th-text="${exchange.clientTranId}">...</td>
+				<td data-th-text="${exchange.msisdn}">...</td>
+				<td data-th-text="${exchange.msgbody}">...</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+</body>
+</html>
