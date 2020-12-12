@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -22,10 +23,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mslapiagent.entity.MSLApiAgent;
+import com.mslapiagent.service.MSLApiAgentRepo;
 
 @Controller
 public class ApiAgentController {
 
+	@Autowired
+	private MSLApiAgentRepo mslApiAgentRepo;
+	
 	@RequestMapping("")
 	public String Home() {
 
@@ -97,7 +102,7 @@ public class ApiAgentController {
 		
 		MSLApiAgent body = exchange.getBody();
 		int id = body.getId();
-		BigInteger tranId = body.getTranId();
+		String tranId = body.getTranId();
 		String clientTranId = body.getClientTranId();
 		String msisdn = body.getMsisdn();
 		String msgbody = body.getMsgbody();
@@ -231,5 +236,29 @@ public class ApiAgentController {
 		return "test02";
 	}
 	
-	
+	@RequestMapping("/test08")
+	public String attaComsianTest08(ModelMap modelMap, MSLApiAgent mslApiAgent) throws JsonMappingException, JsonProcessingException {
+
+		// request url
+		String url = "http://localhost:8080/MSLSystem_3/api/v1/messages";
+
+		// create an instance of RestTemplate
+		RestTemplate restTemplate2 = new RestTemplate();
+
+		// make an HTTP GET request
+		String json = restTemplate2.getForObject(url, String.class);
+
+		ObjectMapper mapper = new ObjectMapper();
+		List<MSLApiAgent> readValue = mapper.reader().forType(new TypeReference<List<MSLApiAgent>>() {}).readValue(json);
+		
+		ArrayList<MSLApiAgent> arrayList = new ArrayList<MSLApiAgent>();
+		
+		arrayList = (ArrayList<MSLApiAgent>) readValue;
+		mslApiAgentRepo.saveAll(arrayList);
+		
+		modelMap.addAttribute("exchanges", readValue);
+		// print json
+
+		return "test02";
+	}
 }

@@ -2,12 +2,16 @@ package com.mslapiagent.entity;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-//@Entity
+@Entity
 @JsonDeserialize
 public class MSLApiAgent{
 
@@ -15,22 +19,25 @@ public class MSLApiAgent{
 	 * 
 	 */
 //	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	private BigInteger tranId;
+	private String tranId;
 	private String clientTranId;
 	private String msisdn;
 	private String msgbody;
 	
+
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public BigInteger getTranId() {
+	public String getTranId() {
 		return tranId;
 	}
-	public void setTranId(BigInteger tranId) {
+	public void setTranId(String tranId) {
 		this.tranId = tranId;
 	}
 	public String getClientTranId() {
