@@ -9,6 +9,9 @@ public class MSLApiAgentCollection {
 	public MSLApiAgentCollection(List<MSLApiAgent> readValue) {
 	}
 
+	public MSLApiAgentCollection() {
+	}
+
 	public List<MSLApiAgent> getAgents() {
 		return agents;
 	}

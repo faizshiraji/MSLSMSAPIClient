@@ -1,9 +1,5 @@
 package com.mslapiagent.entity;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,9 +18,10 @@ public class MSLApiAgent{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String tranId;
-	private String clientTranId;
-	private String msisdn;
+	private Long clientTranId;
+	private Long msisdn;
 	private String msgbody;
 	
 
@@ -40,16 +37,16 @@ public class MSLApiAgent{
 	public void setTranId(String tranId) {
 		this.tranId = tranId;
 	}
-	public String getClientTranId() {
+	public Long getClientTranId() {
 		return clientTranId;
 	}
-	public void setClientTranId(String clientTranId) {
+	public void setClientTranId(Long clientTranId) {
 		this.clientTranId = clientTranId;
 	}
-	public String getMsisdn() {
+	public Long getMsisdn() {
 		return msisdn;
 	}
-	public void setMsisdn(String msisdn) {
+	public void setMsisdn(Long msisdn) {
 		this.msisdn = msisdn;
 	}
 	public String getMsgbody() {

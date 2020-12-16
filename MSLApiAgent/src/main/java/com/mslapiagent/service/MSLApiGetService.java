@@ -3,5 +3,7 @@ package com.mslapiagent.service;
 import com.mslapiagent.entity.MSLApiAgent;
 
 public interface MSLApiGetService {
-	public MSLApiAgent findMslApiAgent(Long id);
+	public MSLApiAgent findMslApiAgentById(Long id);
+	public MSLApiAgent findMslApiAgentByMsisdn(Long msisdn);
+	public MSLApiAgent findMslApiAgentByTranId(String tranId);
 }
