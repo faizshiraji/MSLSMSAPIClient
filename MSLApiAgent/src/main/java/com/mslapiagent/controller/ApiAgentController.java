@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mslapiagent.entity.MSLApiAgent;
 import com.mslapiagent.entity.MSLApiAgentCollection;
 import com.mslapiagent.service.MSLApiAgentRepo;
+import com.mslapiagent.service.SnowFlacks;
 
 @Controller
 public class ApiAgentController {
@@ -325,6 +326,58 @@ public class ApiAgentController {
 				MSLApiAgent body = exchange.getBody();	
 				mslApiAgentRepo.save(body);
 				}
+
+			}
+
+		// print json
+
+		return "test02";
+		// Result: I can save all data to db. But here i need to use 2 types of rest call. And repeat data are saving to db. 
+	}
+	
+	@RequestMapping("/test11")
+	public String attaComsianTest11(Model model, MSLApiAgent mslApiAgent) throws JsonMappingException, JsonProcessingException {
+		// request url
+		String url = "http://localhost:8080/MSLSystem_3/api/v1/messages/";
+		String urlPost = "http://localhost:8080/MSLSystem_3/api/v1/smsupdate";
+
+		// create an instance of RestTemplate
+		RestTemplate restTemplate2 = new RestTemplate();
+
+		// make an HTTP GET request
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+		HttpEntity request = new HttpEntity(headers);
+		
+		String json = restTemplate2.getForObject(url, String.class);
+
+		ObjectMapper mapper = new ObjectMapper();
+		List<MSLApiAgent> readValue = mapper.reader().forType(new TypeReference<List<MSLApiAgent>>() {}).readValue(json);
+		
+		ArrayList<MSLApiAgent> arrayList = new ArrayList<MSLApiAgent>();
+		arrayList = (ArrayList<MSLApiAgent>) readValue;
+		
+		Object[] array = arrayList.toArray();
+
+		for (int i = 0; i < array.length; i++) {
+			
+			if (mslApiAgent.getId() != i) {
+				ResponseEntity<MSLApiAgent> exchange = restTemplate2.exchange(url+i, HttpMethod.GET,request,MSLApiAgent.class);
+				MSLApiAgent body = exchange.getBody();	
+				if (body.getClientTranId() != null) {
+					System.out.println("Yooooooooooooooooo");
+				}
+				long nextId = snowFlacks.nextId();
+				body.setClientTranId(nextId);
+				
+				MSLApiAgent postForObject = restTemplate2.postForObject(urlPost, request, MSLApiAgent.class);
+				System.out.println(postForObject);
+				mslApiAgentRepo.save(body);
+			}
 
 			}
 
