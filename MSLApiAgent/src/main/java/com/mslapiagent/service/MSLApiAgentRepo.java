@@ -11,9 +11,10 @@ import java.lang.Long;
 
 @Repository
 public interface MSLApiAgentRepo extends CrudRepository<MSLApiAgent, Integer> {
-	boolean findByTranId(String tranId);
+//	boolean findByTranId(String tranId);
 	Optional<MSLApiAgent> findById(Integer id);
 	List<MSLApiAgent> findByMsisdn(Long msisdn);
 	List<MSLApiAgent> findByMsisdn(String string);
 	List<MSLApiAgent> findByClientTranId(Long clientTranId);
+	List<MSLApiAgent> findByTranId(String tranId);
 }

@@ -25,6 +25,8 @@ import com.mslapiagent.dao.MSLApiAgentDao;
 import com.mslapiagent.entity.MSLApiAgent;
 import com.mslapiagent.service.MSLApiAgentRepo;
 
+import net.bytebuddy.asm.Advice.This;
+
 @Controller
 public class ApiAgentController {
 
@@ -366,11 +368,11 @@ public class ApiAgentController {
 	}
 	
 	@RequestMapping("/test14")
-	public String bittaComsianTest14() {
+	public String bittaComsianTest14(MSLApiAgent mslApiAgent) {
 		String url = "http://localhost:8080/MSLSystem_3/api/v1/messages/";
 		String urlPost = "http://localhost:8080/MSLSystem_3/api/v1/smsupdate";
 		// create an instance of RestTemplate
-		RestTemplate restTemplate2 = new RestTemplate();
+		RestTemplate restTemplate2 = new RestTemplate(); 
 
 		// make an HTTP GET request
 
@@ -379,6 +381,38 @@ public class ApiAgentController {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		
+		String mslAPIObjects = restTemplate2.getForObject(url, String.class);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		try {
+			List<MSLApiAgent> readValue = mapper.reader().forType(new TypeReference<List<MSLApiAgent>>() {}).readValue(mslAPIObjects);
+			
+			ArrayList<MSLApiAgent> mslAPIArray = new ArrayList<MSLApiAgent>();
+			
+			mslAPIArray = (ArrayList<MSLApiAgent>) readValue;
+			
+			Object[] array = mslAPIArray.toArray();
+			Long tranIDSearch = 1L;
+			String t = String.valueOf(tranIDSearch);
+			List<MSLApiAgent> findByTranId = mslApiAgentDao.findByTranId(t);
+			
+			Object[] array2 = findByTranId.toArray();
+			int length = array2.length;
+			System.out.println(length);
+				for (int i = 0; i < array2.length; i++) {
+					Object object = array[i];
+					mslApiAgent = (MSLApiAgent) object;
+//					String apiTranId = mslApiAgent.getTranId();
+					System.out.println(mslApiAgent.toString());
+				} 
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return "test02";
 		
