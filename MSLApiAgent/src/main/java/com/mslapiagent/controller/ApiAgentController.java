@@ -1,10 +1,8 @@
 package com.mslapiagent.controller;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +17,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mslapiagent.dao.MSLApiAgentDao;
 import com.mslapiagent.entity.MSLApiAgent;
-import com.mslapiagent.entity.MSLApiAgentCollection;
-import com.mslapiagent.entity.MSLApiAgentUpdate;
 import com.mslapiagent.service.MSLApiAgentRepo;
-import com.mslapiagent.service.SnowFlacks;
 
 @Controller
 public class ApiAgentController {
@@ -121,10 +114,6 @@ public class ApiAgentController {
 		String msgbody = body.getMsgbody();
 
 		model.addAttribute("exchanges", body);
-//		model.addAttribute("tranId", tranId);
-//		model.addAttribute("clientTranId", clientTranId);
-//		model.addAttribute("msisdn", msisdn);
-//		model.addAttribute("msgbody", msgbody);
 		// print json
 
 		return "test02";
@@ -149,21 +138,12 @@ public class ApiAgentController {
 
 		HttpEntity request = new HttpEntity(headers);
 		
-//		ResponseEntity<MSLApiAgent> exchange = restTemplate2.exchange(url, HttpMethod.GET,request,MSLApiAgent.class);
 		String forObject = restTemplate2.postForObject(url, request, String.class);
 		ObjectMapper objectMapper = new ObjectMapper();
 		List<MSLApiAgent> readValue = (List<MSLApiAgent>) objectMapper.readValue(forObject, MSLApiAgent.class);
 		
 		
-//		
-//		String test = "It's my test.";
-
-//		model.addAttribute("apiAgents", apiAgents);
-		
-		
-//		model.addAttribute("test", test);
 		model.addAttribute("readValue", readValue);
-		// print json
 
 		return "test02";
 	}
@@ -188,11 +168,7 @@ public class ApiAgentController {
 		
 		ResponseEntity<MSLApiAgent> exchange = restTemplate2.exchange(url, HttpMethod.GET,request,MSLApiAgent.class);
 		
-//		MSLApiAgent body = exchange.getBody();
 		ArrayList<MSLApiAgent> arrayList = new ArrayList<>();
-		
-		
-//		model.addAttribute("id", id);
 
 		// print json
 
@@ -344,59 +320,6 @@ public class ApiAgentController {
 		// Result: I can save all data to db. But here i need to use 2 types of rest call. And repeat data are saving to db. 
 	}
 	
-//	@RequestMapping("/test11")
-//	public String attaComsianTest11(Model model, MSLApiAgent mslApiAgent) throws JsonMappingException, JsonProcessingException {
-//		// request url
-//		String url = "http://localhost:8080/MSLSystem_3/api/v1/messages/";
-//		String urlPost = "http://localhost:8080/MSLSystem_3/api/v1/smsupdate";
-//
-//		// create an instance of RestTemplate
-//		RestTemplate restTemplate2 = new RestTemplate();
-//
-//		// make an HTTP GET request
-//
-//		HttpHeaders headers = new HttpHeaders();
-//
-//		headers.setContentType(MediaType.APPLICATION_JSON);
-//		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-//
-//		HttpEntity request = new HttpEntity(headers);
-//		
-//		String json = restTemplate2.getForObject(url, String.class);
-//
-//		ObjectMapper mapper = new ObjectMapper();
-//		List<MSLApiAgent> readValue = mapper.reader().forType(new TypeReference<List<MSLApiAgent>>() {}).readValue(json);
-//		
-//		ArrayList<MSLApiAgent> arrayList = new ArrayList<MSLApiAgent>();
-//		arrayList = (ArrayList<MSLApiAgent>) readValue;
-//		
-//		Object[] array = arrayList.toArray();
-//
-//		for (int i = 0; i < array.length; i++) {
-//			
-//			if (mslApiAgent.getId() != i) {
-//				ResponseEntity<MSLApiAgent> exchange = restTemplate2.exchange(url+i, HttpMethod.GET,request,MSLApiAgent.class);
-//				MSLApiAgent body = exchange.getBody();	
-//				if (body.getClientTranId() != null) {
-//					System.out.println("Yooooooooooooooooo");
-//				}
-//				long nextId = snowFlacks.nextId();
-//				body.setClientTranId(nextId);
-//				
-//				MSLApiAgent postForObject = restTemplate2.postForObject(urlPost, request, MSLApiAgent.class);
-//				System.out.println(postForObject);
-//				mslApiAgentRepo.save(body);
-//			}
-//
-//			}
-//
-//		// print json
-//
-//		return "test02";
-//		// Result: I can save all data to db. But here i need to use 2 types of rest call. And repeat data are saving to db. 
-//	}
-	
-	
 	@RequestMapping("/test12")
 	public String attaComsianTest12(Model model, MSLApiAgent mslApiAgent) {
 		// request url
@@ -432,28 +355,32 @@ public class ApiAgentController {
 	    JSONObject personJsonObject = new JSONObject();
 	    personJsonObject.put("id", 1);
 	    personJsonObject.put("tranId", 0);
-	    personJsonObject.put("clientTranId", 12345);
+	    personJsonObject.put("clientTranId", 123456);
 	    personJsonObject.put("msisdn", "8801791631664");
 	    personJsonObject.put("msgbody", "PW AB CW1234567");
 	    
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    
 	    HttpEntity<String> request = new HttpEntity<String>(personJsonObject.toString(), headers);
-	    String personResultAsJsonStr = 
-	    	      restTemplate.postForObject(urlPost, request, String.class);
-	    	    JsonNode root = objectMapper.readTree(personResultAsJsonStr);
-	    
-	    	    if (root != null) {
-					System.out.println("Root is not null");
-					System.out.println(root);
-				} else {
-					System.out.println("Root is null");					
-				}
-	    	    
-	    	    
-
+	    restTemplate.postForObject(urlPost, request, String.class);
 		
 		return "test02";
 	}
 	
+	@RequestMapping("/test14")
+	public String bittaComsianTest14() {
+		String url = "http://localhost:8080/MSLSystem_3/api/v1/messages/";
+		String urlPost = "http://localhost:8080/MSLSystem_3/api/v1/smsupdate";
+		// create an instance of RestTemplate
+		RestTemplate restTemplate2 = new RestTemplate();
+
+		// make an HTTP GET request
+
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		
+		
+		return "test02";
+		
+	}
 }
