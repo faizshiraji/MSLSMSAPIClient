@@ -15,4 +15,5 @@ public interface MSLApiAgentRepo extends CrudRepository<MSLApiAgent, Integer> {
 	Optional<MSLApiAgent> findById(Integer id);
 	List<MSLApiAgent> findByMsisdn(Long msisdn);
 	List<MSLApiAgent> findByMsisdn(String string);
+	List<MSLApiAgent> findByClientTranId(Long clientTranId);
 }

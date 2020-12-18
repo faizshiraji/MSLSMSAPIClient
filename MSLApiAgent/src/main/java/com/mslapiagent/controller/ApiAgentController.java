@@ -399,53 +399,22 @@ public class ApiAgentController {
 	@RequestMapping("/test12")
 	public String attaComsianTest12(Model model, MSLApiAgent mslApiAgent) {
 		// request url
-//		String url = "http://localhost:8080/MSLSystem_3/api/v1/messages/";
-//		String urlPost = "http://localhost:8080/MSLSystem_3/api/v1/smsupdate";
-//
-//		// create an instance of RestTemplate
-//		RestTemplate restTemplate2 = new RestTemplate();
-//
-//		// make an HTTP GET request
-//
-//		HttpHeaders headers = new HttpHeaders();
-//
-//		headers.setContentType(MediaType.APPLICATION_JSON);
-//		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-//
-//
-//		
-//		MSLApiAgentUpdate mslApiAgentUpdate = new MSLApiAgentUpdate();
-//		mslApiAgentUpdate.setId(mslApiAgent.getId());
-//		mslApiAgentUpdate.setMsisdn(mslApiAgent.getMsisdn());
-//		mslApiAgentUpdate.setTranId(mslApiAgent.getTranId());
-//		mslApiAgentUpdate.setClientTranId(mslApiAgent.getClientTranId());
-//		mslApiAgentUpdate.setMsgbody(mslApiAgent.getMsgbody());
-//		JSONObject personJsonObject = new JSONObject();
-//		personJsonObject.put("id", mslApiAgent.getId());
-//		personJsonObject.put("msisdn", mslApiAgent.getMsisdn());
-//		personJsonObject.put("tranId", mslApiAgent.getTranId());
-//		personJsonObject.put("clientTranId", mslApiAgent.getClientTranId());
-//		personJsonObject.put("msgbody", mslApiAgent.getMsgbody());
-//		HttpEntity<JSONObject> request = new HttpEntity<>(personJsonObject, headers);
-		
-//		long count = mslApiAgentDao.count();
-//		MSLApiAgent string = (MSLApiAgent) mslApiAgentDao.findAll();
+
 		Long msisdn  = 8801791631664L;
 		System.out.println(msisdn);
 		List<MSLApiAgent> findByMsisdn = mslApiAgentRepo.findByMsisdn(msisdn);
+		List<MSLApiAgent> findByClientTranId = mslApiAgentRepo.findByClientTranId(null);
+		
 		List<MSLApiAgent> arrayList = new ArrayList<>();
-		arrayList = (ArrayList<MSLApiAgent>)findByMsisdn;
+		arrayList = (ArrayList<MSLApiAgent>)findByClientTranId;
 
 		Object[] array = arrayList.toArray();
 		String string = array.toString();
 
-		// ResponseEntity<String> result = restTemplate2.postForEntity(urlPost, request, String.class);
-//		// print json
-////		Long clientTranId = string.getClientTranId();
-////		System.out.println(array);
-//		System.out.println(array.toString());
-		for (int i = 0; i < array.length; i++) {
-			System.out.println(array[i]);			
+		if (array.length > 0) {
+			for (int i = 0; i < array.length; i++) {
+				System.out.println(array[i]);			
+			}			
 		}
 
 		
