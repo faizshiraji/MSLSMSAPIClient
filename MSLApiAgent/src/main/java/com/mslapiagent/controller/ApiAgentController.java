@@ -23,6 +23,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mslapiagent.dao.MSLApiAgentDao;
 import com.mslapiagent.entity.MSLApiAgent;
@@ -419,7 +420,40 @@ public class ApiAgentController {
 
 		
 		return "test02";
-		// Result: I can save all data to db. But here i need to use 2 types of rest call. And repeat data are saving to db. 
+	}
+	
+	@RequestMapping("/test13")
+	public String attaComsianTest13() throws JsonMappingException, JsonProcessingException {
+		// request url
+		String urlPost = "http://localhost:8080/MSLSystem_3/api/v1/smsupdate";
+		RestTemplate restTemplate = new RestTemplate();
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_JSON);
+	    JSONObject personJsonObject = new JSONObject();
+	    personJsonObject.put("id", 1);
+	    personJsonObject.put("tranId", 0);
+	    personJsonObject.put("clientTranId", 12345);
+	    personJsonObject.put("msisdn", "8801791631664");
+	    personJsonObject.put("msgbody", "PW AB CW1234567");
+	    
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    
+	    HttpEntity<String> request = new HttpEntity<String>(personJsonObject.toString(), headers);
+	    String personResultAsJsonStr = 
+	    	      restTemplate.postForObject(urlPost, request, String.class);
+	    	    JsonNode root = objectMapper.readTree(personResultAsJsonStr);
+	    
+	    	    if (root != null) {
+					System.out.println("Root is not null");
+					System.out.println(root);
+				} else {
+					System.out.println("Root is null");					
+				}
+	    	    
+	    	    
+
+		
+		return "test02";
 	}
 	
 }
