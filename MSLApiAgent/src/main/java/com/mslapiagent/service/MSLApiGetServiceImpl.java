@@ -14,6 +14,9 @@ public class MSLApiGetServiceImpl implements MSLApiGetService {
 
 	String url = "http://localhost:8080/MSLSystem_3/api/v1/messages/";
 
+	
+	MSLApiAgent mSLApiAgent;
+	
 	@Autowired
 	private MSLApiAgentRepo mslApiAgentRepo;
 	
@@ -36,10 +39,17 @@ public class MSLApiGetServiceImpl implements MSLApiGetService {
 	@Override
 	@Transactional
 	public MSLApiAgent findMslApiAgentByTranId(String tranId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
-
+	@Transactional
+	public String findNewTranId(String apiTranId) {
+		if (mSLApiAgent.getTranId() != apiTranId) {
+			System.out.println(apiTranId);
+		}
+		
+		
+		return apiTranId;
+	}
 
 }

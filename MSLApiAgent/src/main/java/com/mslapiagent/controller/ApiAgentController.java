@@ -24,6 +24,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mslapiagent.dao.MSLApiAgentDao;
 import com.mslapiagent.entity.MSLApiAgent;
 import com.mslapiagent.service.MSLApiAgentRepo;
+import com.mslapiagent.service.MSLApiAgentTransationValidator;
+import com.mslapiagent.service.MSLApiGetService;
+import com.mslapiagent.service.MSLApiGetServiceImpl;
 
 import net.bytebuddy.asm.Advice.This;
 
@@ -35,6 +38,8 @@ public class ApiAgentController {
 	
 	@Autowired
 	MSLApiAgentDao mslApiAgentDao;
+	
+	MSLApiGetService mslApiGetService;
 	
 	@Autowired
 	private com.mslapiagent.service.SnowFlacks snowFlacks;
@@ -368,7 +373,7 @@ public class ApiAgentController {
 	}
 	
 	@RequestMapping("/test14")
-	public String bittaComsianTest14(MSLApiAgent mslApiAgent) {
+	public String bittaComsianTest14(MSLApiAgent mslApiAgent) throws Exception {
 		String url = "http://localhost:8080/MSLSystem_3/api/v1/messages/";
 		String urlPost = "http://localhost:8080/MSLSystem_3/api/v1/smsupdate";
 		// create an instance of RestTemplate
@@ -388,29 +393,46 @@ public class ApiAgentController {
 		try {
 			List<MSLApiAgent> readValue = mapper.reader().forType(new TypeReference<List<MSLApiAgent>>() {}).readValue(mslAPIObjects);
 			
-			ArrayList<MSLApiAgent> mslAPIArray = new ArrayList<MSLApiAgent>();
-			
-			mslAPIArray = (ArrayList<MSLApiAgent>) readValue;
-			
-			Object[] array = mslAPIArray.toArray();
-			Long tranIDSearch = 1L;
-			String t = String.valueOf(tranIDSearch);
-			List<MSLApiAgent> findByTranId = mslApiAgentDao.findByTranId(t);
-			
-			Object[] array2 = findByTranId.toArray();
-			int length = array2.length;
-			System.out.println(length);
-				for (int i = 0; i < array2.length; i++) {
-					Object object = array[i];
-					mslApiAgent = (MSLApiAgent) object;
-//					String apiTranId = mslApiAgent.getTranId();
-					System.out.println(mslApiAgent.toString());
-				} 
+				ArrayList<MSLApiAgent> mslAPIArray = new ArrayList<MSLApiAgent>(readValue);
+				Object[] apiJSONArray = mslAPIArray.toArray();
+
+				for (int i = 0; i < apiJSONArray.length; i++) {
+					mslApiAgent = (MSLApiAgent) apiJSONArray[i];
+					List<MSLApiAgent> findByTranId = mslApiAgentDao.findByTranId(mslApiAgent.getTranId());
+					if (findByTranId.isEmpty()) {
+						long nextId = snowFlacks.nextId();
+						mslApiAgent.setClientTranId(nextId);
+						mslApiAgentDao.save(mslApiAgent);
+						
+						JSONObject personJsonObject = new JSONObject();
+					    personJsonObject.put("id", mslApiAgent.getId());
+					    personJsonObject.put("tranId", mslApiAgent.getTranId());
+					    personJsonObject.put("clientTranId", nextId);
+					    personJsonObject.put("msisdn", mslApiAgent.getMsisdn());
+					    personJsonObject.put("msgbody", mslApiAgent.getMsgbody());
+					    
+					    HttpEntity<String> request = new HttpEntity<String>(personJsonObject.toString(), headers);
+					    restTemplate2.postForObject(urlPost, request, String.class);
+						
+						System.out.println(nextId);
+					} else {
+						
+					}
+					
+				}
+//				List<MSLApiAgent> findByTranId = mslApiAgentDao.findByTranId(t);
+//			
+//			Object[] array2 = findByTranId.toArray();
+////			
+//				for (int i = 0; i < array2.length; i++) {
+//					Object object = array[i];
+//					mslApiAgent = (MSLApiAgent) object;
+//					
+//					System.out.println(mslApiAgent.getTranId().toString());
+//				} 
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
